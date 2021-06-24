@@ -11,25 +11,25 @@ const ChatPage = () => {
     dispatch(getAllUsers())
   }, [dispatch, isAuthenticated])
 
-  if (!isAuthenticated) {
-    return <Redirect to="/login" />
-  }
-
   return (
     <div className="ui container">
-      <div className="mt-2">
-        <div className="ui very relaxed divided list">
-          {users.map(user => {
-            return (
-              <div className="item" key={user._id}>
-                <div className="content">
-                  <a className="header tag">{user.name}</a>
+      {!isAuthenticated ? (
+        <Redirect to="login" />
+      ) : (
+        <div className="mt-2">
+          <div className="ui very relaxed divided list">
+            {users.map(user => {
+              return (
+                <div className="item" key={user._id}>
+                  <div className="content">
+                    <a className="header tag">{user.name}</a>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
