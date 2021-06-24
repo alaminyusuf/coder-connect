@@ -2,13 +2,12 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../../store/ducks/user'
 import { useFormik } from 'formik'
-import { Redirect, useHistory } from 'react-router'
+import { Redirect } from 'react-router'
 
 const Login = () => {
-  const history = useHistory()
   const dipatch = useDispatch()
   const { error, isAuthenticated } = useSelector(state => state.user)
-  console.log(isAuthenticated)
+
   const emailFieldError = error && error.field === 'email'
   const passwordFieldError = error && error.field === 'password'
   const formik = useFormik({
@@ -16,9 +15,14 @@ const Login = () => {
       email: '',
       password: '',
     },
-    onSubmit: values => {
+    onSubmit: (values, actions) => {
       dipatch(loginUser(values))
-      formik.resetForm()
+      actions.resetForm({
+        values: {
+          email: '',
+          password: '',
+        },
+      })
     },
   })
 
