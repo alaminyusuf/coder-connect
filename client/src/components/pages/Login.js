@@ -1,45 +1,47 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '../../store/ducks/user'
-import { useFormik } from 'formik'
 import { Redirect } from 'react-router'
+
+import { loginUser } from '../../store/ducks/user'
 
 const Login = () => {
   const dipatch = useDispatch()
+  const [fields, setFields] = useState({
+    email: '',
+    password: '',
+  })
   const { error, isAuthenticated } = useSelector(state => state.user)
 
   const emailFieldError = error && error.field === 'email'
   const passwordFieldError = error && error.field === 'password'
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    onSubmit: (values, actions) => {
-      dipatch(loginUser(values))
-      actions.resetForm({
-        values: {
-          email: '',
-          password: '',
-        },
-      })
-    },
-  })
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+    await dipatch(loginUser(fields))
+  }
+
+  const handleChange = e => {
+    const value = e.target.value
+    setFields({
+      ...fields,
+      [e.target.name]: value,
+    })
+  }
 
   return (
     <div style={{ margin: '2em 0' }}>
       {isAuthenticated ? (
         <Redirect to="/" />
       ) : (
-        <form className="ui form" onSubmit={formik.handleSubmit}>
+        <form className="ui form" onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="email">Email</label>
             {emailFieldError && <div>{error.info} </div>}
             <input
               type="email"
               name="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
+              onChange={handleChange}
+              value={fields.email}
               placeholder="Email"
             />
           </div>
@@ -49,8 +51,8 @@ const Login = () => {
             <input
               type="password"
               name="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
+              onChange={handleChange}
+              value={fields.password}
               placeholder="Password"
             />
           </div>
