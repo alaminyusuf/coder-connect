@@ -1,22 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const { compare } = require('bcryptjs');
-const { hashPassword } = require('../utils/hashPassword');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const { compare } = require("bcryptjs");
+const { hashPassword } = require("../utils/hashPassword");
 const {
 	sendRefreshToken,
 	createRefreshToken,
-} = require('../utils/jwtFunctions');
-const auth = require('../middleware/auth');
-const { validateFields } = require('../utils/validationUtil');
+} = require("../utils/jwtFunctions");
+const auth = require("../middleware/auth");
+const { validateFields } = require("../utils/validationUtil");
 
 /**
  * Get all users endpoint
  * @returns An array of all the users
  */
-router.get('/users', async (req, res) => {
-	const response = await User.find({}).select('-password');
+router.get("/users", async (req, res) => {
+	const response = await User.find({}).select("-password");
 	res.status(200).json({ response });
 });
 
@@ -24,8 +24,8 @@ router.get('/users', async (req, res) => {
  * Get single user by ID
  * @augments id
  */
-router.get('/:id', async (req, res) => {
-	const user = await User.findById(req.params.id).select('-password');
+router.get("/:id", async (req, res) => {
+	const user = await User.findById(req.params.id).select("-password");
 	res.status(200).json({ response: user });
 });
 
@@ -37,14 +37,14 @@ router.get('/:id', async (req, res) => {
  *
  * @returns A json with user's data
  */
-router.post('/users', async (req, res) => {
+router.post("/users", async (req, res) => {
 	const user = await User.findOne({ email: req.body.email });
 	if (user)
 		return res.status(400).json({
 			response: {
 				success: false,
 				statusCode: 400,
-				info: 'User already exists',
+				info: "User already exists",
 			},
 		});
 
@@ -66,16 +66,23 @@ router.post('/users', async (req, res) => {
 	return res.json({ newUser });
 });
 
-router.post('/user/login', async (req, res, next) => {
+/**
+ * Login user endpoint
+ * @augments email
+ * @augments password
+ *
+ * @returns A json with user's data
+ */
+router.post("/user/login", async (req, res, next) => {
 	const { email, password } = req.body;
 	const user = await User.findOne({ email });
 	try {
 		if (!user) {
 			res.status(400).json({
 				response: {
-					field: 'email',
+					field: "email",
 					statusCode: 400,
-					info: 'Could not find user',
+					info: "Could not find user",
 				},
 			});
 		}
@@ -85,9 +92,9 @@ router.post('/user/login', async (req, res, next) => {
 		if (!valid) {
 			res.status(400).json({
 				response: {
-					field: 'password',
+					field: "password",
 					statusCode: 400,
-					info: 'Incorrect password',
+					info: "Incorrect password",
 				},
 			});
 		}
@@ -96,12 +103,13 @@ router.post('/user/login', async (req, res, next) => {
 
 		return res.json({
 			response: {
-				status: 'success',
+				status: "success",
 				statusCode: 200,
 				user: {
 					id: user.id,
 					name: user.name,
 					email: user.email,
+					token,
 				},
 			},
 		});
@@ -110,14 +118,17 @@ router.post('/user/login', async (req, res, next) => {
 	}
 });
 
-router.get('/user/auth', auth, async (req, res, next) => {
-	const token = req.headers['x-auth-token'];
+/**
+ * Check for user's authentication
+ */
+router.get("/user/auth", auth, async (req, res, next) => {
+	const token = req.headers["x-auth-token"];
 	if (token) {
 		try {
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
 			return res.json({
 				response: {
-					status: 'success',
+					status: "success",
 					statusCode: 200,
 					user: decoded,
 				},
