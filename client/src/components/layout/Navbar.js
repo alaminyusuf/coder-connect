@@ -1,11 +1,18 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../../store/ducks/user'
+
 const Navbar = () => {
+  const dispatch = useDispatch()
   const { isAuthenticated } = useSelector(state => state.user)
   const location = useLocation()
   const isLogin = location.pathname === '/login'
   const isSignUp = location.pathname === '/signup'
+
+  const signOut = async () => {
+    await dispatch(logout())
+  }
 
   return (
     <div className="ui menu">
@@ -32,7 +39,13 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-      ) : null}
+      ) : (
+        <div className="right item">
+          <div onClick={() => signOut()} className="ui item">
+            Logout
+          </div>
+        </div>
+      )}
     </div>
   )
 }
