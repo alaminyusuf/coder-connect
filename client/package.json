@@ -15,11 +15,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.3",
-    "@material-ui/core": "^4.10.2",
-    "@material-ui/icons": "^4.9.1",
     "axios": "^0.21.1",
     "dotenv-webpack": "^1.7.0",
-    "graphql-tag": "^2.12.4",
     "minimist": "^1.2.5",
     "netlify-cli": "^2.40.0",
     "react": "^16.12.0",
@@ -28,8 +25,7 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
-    "redux-thunk": "^2.3.0",
-    "styled-components": "^5.1.0"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
