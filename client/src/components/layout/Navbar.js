@@ -41,7 +41,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="right item">
-          <div onClick={() => signOut()} className="ui item">
+          <div onClick={() => signOut()} className="ui item secondary">
             Logout
           </div>
         </div>

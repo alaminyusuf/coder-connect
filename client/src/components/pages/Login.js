@@ -29,14 +29,14 @@ const Login = () => {
   }
 
   return (
-    <div style={{ margin: '2em 0' }}>
+    <div className="main-content">
       {isAuthenticated ? (
         <Redirect to="/" />
       ) : (
         <form className="ui form" onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="email">Email</label>
-            {emailFieldError && <div>{error.info} </div>}
+            {emailFieldError && <div className="ui red message">{error.info} </div>}
             <input
               type="email"
               name="email"
@@ -47,7 +47,9 @@ const Login = () => {
           </div>
           <div className="field">
             <label htmlFor="password">Password</label>
-            {passwordFieldError && <div>{error.info} </div>}
+            {passwordFieldError && (
+              <div className="ui red message">{error.info} </div>
+            )}
             <input
               type="password"
               name="password"

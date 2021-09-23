@@ -28,7 +28,7 @@ const SignUp = () => {
     })
   }
   return (
-    <div style={{ margin: '2em 0' }}>
+    <div className="main-content">
       {isAuthenticated ? (
         <Redirect to="/" />
       ) : (
